@@ -1,0 +1,67 @@
+:root{
+  --perfil-blue: var(--blue, #003d99);
+  --perfil-purple: var(--accent-purple, #5c2ca6);
+}
+
+.login-header{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:12px;
+  margin-bottom:6px;
+}
+
+.login-avatar a{
+  width:48px;
+  height:48px;
+  border-radius:50%;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  background: var(--white);
+  border: 2px solid rgba(92,44,166,0.10);
+  box-shadow: 0 6px 18px rgba(3,37,99,0.04);
+}
+.login-avatar svg{ width:20px; height:20px; color:var(--accent-purple) }
+
+.profile-switch{
+  display:inline-flex;
+  gap:8px;
+  align-items:center;
+}
+.profile-switch a,
+.profile-switch button{
+  font-size:0.95rem;
+  text-decoration:none;
+  padding:8px 12px;
+  border-radius:12px;
+  color:var(--muted);
+  font-weight:600;
+  transition: all .12s ease;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+}
+
+.profile-switch a.perfil-aluno,
+.profile-switch button.perfil-aluno{ color:var(--perfil-blue); }
+.profile-switch a.perfil-professor,
+.profile-switch button.perfil-professor{ color:var(--perfil-purple); }
+
+.profile-switch a.active,
+.profile-switch button.active{
+  background-color: var(--perfil-blue);
+  color: #fff;
+  box-shadow: 0 8px 24px rgba(0,61,153,0.12);
+}
+
+.profile-switch a.perfil-professor.active,
+.profile-switch button.perfil-professor.active{ background-color: var(--perfil-purple); color: #fff }
+
+.login-card{ text-align:center; }
+
+@media (max-width:680px){
+  .login-header{ flex-direction:column }
+  .login-avatar{ margin:0 }
+  .profile-switch{ justify-content:center }
+}

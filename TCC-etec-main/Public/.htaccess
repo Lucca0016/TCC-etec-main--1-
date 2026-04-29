@@ -1,0 +1,16 @@
+Options +FollowSymLinks -Indexes
+
+DirectoryIndex index.php index.html
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteBase /TCC-etec/Public/
+
+    # Permite acesso a arquivos físicos e diretórios reais
+    RewriteCond %{REQUEST_FILENAME} -f [OR]
+    RewriteCond %{REQUEST_FILENAME} -d
+    RewriteRule ^.*$ - [L]
+
+    # Tudo mais vai para index.php
+    RewriteRule ^(.*)$ index.php [L,QSA]
+</IfModule>

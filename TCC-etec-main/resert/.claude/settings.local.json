@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(powershell -Command \"Get-ChildItem -Path D:\\\\wamp64\\\\www\\\\TCC-etec -Recurse | Select-Object FullName\")",
+      "Bash(powershell -Command \"Get-ChildItem -Path D:\\\\wamp64\\\\www\\\\TCC-etec\\\\app -Directory | Select-Object Name\")",
+      "Bash(powershell -Command \"Get-ChildItem -Path D:\\\\wamp64\\\\www\\\\TCC-etec\\\\app\\\\Http\\\\Controllers | Select-Object Name\")",
+      "Bash(powershell -Command \"Get-ChildItem -Path D:\\\\wamp64\\\\www\\\\TCC-etec -File | Where-Object {$_.Extension -in '.md', '.txt'} | Select-Object Name\")"
+    ]
+  }
+}

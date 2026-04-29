@@ -1,0 +1,11 @@
+CREATE TABLE vestibular_inscricoes (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nome VARCHAR(150) NOT NULL,
+    cpf VARCHAR(20) NOT NULL,
+    email VARCHAR(150) NOT NULL,
+    telefone VARCHAR(20) NOT NULL,
+    curso VARCHAR(100) NOT NULL,
+    turno VARCHAR(50) NOT NULL,
+    modalidade VARCHAR(50) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

@@ -1,0 +1,1 @@
+<?php try { $pdo = new PDO("mysql:host=localhost;dbname=tcc_etec", "root", ""); $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION); $pdo->exec("ALTER TABLE biblioteca_livros ADD COLUMN imagem_capa VARCHAR(255) NULL DEFAULT NULL AFTER isbn;"); echo "DB alterado com sucesso\n"; } catch(Exception $e) { echo "Erro: " . $e->getMessage(); } ?>

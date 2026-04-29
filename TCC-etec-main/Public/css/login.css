@@ -1,0 +1,216 @@
+:root{
+  --canvas:#0d1b2a;
+  --canvas-muted:#111f33;
+  --card:#f7f9fc;
+  --card-border:#e0e5ee;
+  --ink:#0c1b2f;
+  --ink-muted:#5b6678;
+  --accent:#003d99;
+  --accent-strong:#0056d6;
+  --accent-soft:rgba(0,61,153,0.12);
+  --error-bg:#fdecec;
+  --error-text:#9f1d1d;
+  --success-bg:#e4f7ec;
+  --success-text:#1c6b3c;
+}
+
+*{box-sizing:border-box;}
+html,body{height:100%;}
+body{
+  margin:0;
+  font-family:'Inter',system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;
+  background:var(--canvas);
+  color:var(--ink);
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+}
+
+.login-body{
+  min-height:100vh;
+  background:linear-gradient(160deg,var(--canvas) 0%,var(--canvas-muted) 60%,var(--canvas) 100%);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:48px 16px;
+}
+
+.login-page{
+  width:100%;
+  max-width:560px;
+}
+
+.login-card{
+  background:var(--card);
+  border:1px solid var(--card-border);
+  border-radius:28px;
+  padding:48px;
+  box-shadow:0 24px 80px rgba(5,12,22,0.25);
+}
+
+.brand-stamp{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  margin-bottom:1.75rem;
+}
+
+.brand-logo{
+  width:92px;
+  height:auto;
+  display:block;
+}
+
+.card-head{
+  margin-bottom:1.5rem;
+}
+
+.card-eyebrow{
+  text-transform:uppercase;
+  letter-spacing:0.3em;
+  font-size:0.75rem;
+  color:var(--ink-muted);
+  margin:0;
+}
+
+.card-head h2{
+  margin:0.4rem 0 0.2rem;
+  font-size:1.9rem;
+  font-weight:600;
+  color:var(--ink);
+}
+
+.card-subhead{
+  margin:0;
+  color:var(--ink-muted);
+  font-size:0.95rem;
+}
+
+.profile-toggle{
+  display:flex;
+  gap:8px;
+  padding:6px;
+  border-radius:999px;
+  background:var(--card-border);
+  margin-bottom:1.5rem;
+}
+
+.profile-pill{
+  flex:1;
+  border:0;
+  border-radius:999px;
+  padding:10px 0;
+  background:transparent;
+  color:var(--ink-muted);
+  font-weight:600;
+  font-size:0.92rem;
+  cursor:pointer;
+  transition:background .2s ease,color .2s ease,box-shadow .2s ease;
+}
+
+.profile-pill.active{
+  background:#ffffff;
+  color:var(--ink);
+  box-shadow:0 8px 18px rgba(16,40,66,0.12);
+}
+
+.message{
+  border-radius:14px;
+  padding:12px 14px;
+  font-size:0.95rem;
+  margin-bottom:1rem;
+}
+
+.message-error{background:var(--error-bg);color:var(--error-text);}
+.message-success{background:var(--success-bg);color:var(--success-text);}
+
+.login-form{
+  display:flex;
+  flex-direction:column;
+  gap:1rem;
+}
+
+.field label{
+  display:block;
+  margin-bottom:6px;
+  font-weight:600;
+  color:var(--ink);
+}
+
+.field input{
+  width:100%;
+  border-radius:14px;
+  border:1px solid var(--card-border);
+  background:#fff;
+  padding:14px 16px;
+  font-size:1rem;
+  color:var(--ink);
+  transition:border-color .15s ease, box-shadow .15s ease;
+}
+
+.field input::placeholder{color:var(--ink-muted);} 
+.field input:focus{
+  outline:none;
+  border-color:var(--accent);
+  box-shadow:0 0 0 3px rgba(0,61,153,0.18);
+}
+
+.btn{
+  border:0;
+  border-radius:16px;
+  font-size:1rem;
+  font-weight:600;
+  cursor:pointer;
+  transition:transform .15s ease, box-shadow .15s ease;
+}
+
+.btn.primary{
+  width:100%;
+  padding:14px 18px;
+  background:linear-gradient(120deg,var(--accent),var(--accent-strong));
+  color:#fdfefe;
+  box-shadow:0 18px 40px rgba(15,35,70,0.25);
+}
+
+.btn.primary:hover{transform:translateY(-2px);} 
+
+.support-link{
+  margin-top:1.5rem;
+  text-align:center;
+}
+
+.support-link a{
+  color:var(--accent);
+  text-decoration:none;
+  font-weight:600;
+}
+
+.support-link a:hover{text-decoration:underline;}
+
+.login-footer {
+  text-align: center;
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid var(--card-border);
+}
+
+.forgot-link {
+  color: var(--accent);
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.9rem;
+  transition: all 0.2s;
+}
+
+.forgot-link:hover {
+  text-decoration: underline;
+}
+
+@media (max-width:640px){
+  .login-card{padding:36px 28px;border-radius:24px;}
+  .profile-toggle{flex-direction:column;padding:8px;}
+}
+
+@media (max-width:420px){
+  .login-card{padding:28px 22px;}
+  .brand-stamp{flex-direction:column;align-items:flex-start;gap:8px;}
+}

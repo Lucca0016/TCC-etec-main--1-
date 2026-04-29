@@ -1,0 +1,10 @@
+.env
+vendor/
+banco.txt
+
+/app/Views/frontend-src/node_modules/
+/app/Views/frontend-src/.vite/
+/app/Views/public/frontend/.vite/
+
+.DS_Store
+Thumbs.db

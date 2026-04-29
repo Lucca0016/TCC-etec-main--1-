@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Status das Migrações | TCC-ETEC</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 600px;
+            width: 100%;
+            padding: 40px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            color: #0c1b2f;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            color: #6b7280;
+            font-size: 14px;
+        }
+
+        .status-card {
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .status-card.success {
+            border-color: #d1fae5;
+            background: #f0fdf4;
+        }
+
+        .status-card.error {
+            border-color: #fee2e2;
+            background: #fef2f2;
+        }
+
+        .status-card.pending {
+            border-color: #fef3c7;
+            background: #fffbeb;
+        }
+
+        .status-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .status-icon {
+            font-size: 20px;
+        }
+
+        .status-card.success .status-title {
+            color: #065f46;
+        }
+
+        .status-card.error .status-title {
+            color: #7f1d1d;
+        }
+
+        .status-card.pending .status-title {
+            color: #78350f;
+        }
+
+        .status-description {
+            font-size: 14px;
+            margin-bottom: 12px;
+        }
+
+        .status-card.success .status-description {
+            color: #047857;
+        }
+
+        .status-card.error .status-description {
+            color: #991b1b;
+        }
+
+        .status-card.pending .status-description {
+            color: #92400e;
+        }
+
+        .migration-list {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid currentColor;
+            opacity: 0.7;
+        }
+
+        .migration-item {
+            font-size: 13px;
+            padding: 8px 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .migration-item::before {
+            content: '✓';
+            font-weight: bold;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 30px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-secondary {
+            background: #f3f4f6;
+            color: #0c1b2f;
+            border: 1px solid #d1d5db;
+        }
+
+        .btn-secondary:hover {
+            background: #e5e7eb;
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .spinner {
+            border: 4px solid #e5e7eb;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 15px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .info-box {
+            background: #eff6ff;
+            border-left: 4px solid #3b82f6;
+            padding: 15px;
+            border-radius: 4px;
+            margin-top: 20px;
+            font-size: 13px;
+            color: #1e40af;
+        }
+
+        .info-box strong {
+            display: block;
+            margin-bottom: 5px;
+        }
+    </style>
+    <script src="/TCC-etec/public/js/auth.js"></script>
+  <script>
+    (function () {
+      const token = localStorage.getItem('access_token');
+      if (!token) {
+        window.location.href = '/TCC-etec/public/index.html';
+      }
+    })();
+  </script>
+</head>
+ 
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📚 Biblioteca Digital</h1>
+            <p>Status das Migrações do Banco de Dados</p>
+        </div>
+
+        <div id="statusContainer">
+            <!-- Carregado via JavaScript -->
+        </div>
+
+        <div class="button-group">
+            <button class="btn btn-primary" id="executeBtn" onclick="executeMigrations()">
+                ⚡ Executar Migrações
+            </button>
+            <button class="btn btn-secondary" id="refreshBtn" onclick="location.reload()">
+                🔄 Atualizar
+            </button>
+        </div>
+
+        <div class="info-box">
+            <strong>ℹ️ Informação:</strong>
+            Este painel verifica e executa as migrações necessárias do banco de dados. As migrações adicionam novos recursos como suporte a links de livros para download/leitura.
+        </div>
+    </div>
+
+    <script>
+        async function checkMigrationStatus() {
+            try {
+                const response = await fetch('/TCC-etec/api/migrations/status');
+                const data = await response.json();
+                displayStatus(data);
+            } catch (error) {
+                console.error('Erro ao verificar status:', error);
+                displayError('Erro ao conectar com o servidor');
+            }
+        }
+
+        function displayStatus(data) {
+            const container = document.getElementById('statusContainer');
+            let html = '';
+
+            if (data.link_pdf_existe) {
+                html = `
+                    <div class="status-card success">
+                        <div class="status-title">
+                            <span class="status-icon">✅</span>
+                            Migrações Completas
+                        </div>
+                        <div class="status-description">
+                            Seu banco de dados está totalmente atualizado e pronto para usar!
+                        </div>
+                        <div class="migration-list">
+                            <div class="migration-item">Coluna link_pdf adicionada à tabela biblioteca_livros</div>
+                            <div class="migration-item">Sistema de links para livros ativado</div>
+                            <div class="migration-item">Alunos podem acessar livros via links</div>
+                        </div>
+                    </div>
+                `;
+                document.getElementById('executeBtn').disabled = true;
+                document.getElementById('executeBtn').textContent = '✅ Migrações Já Executadas';
+            } else {
+                html = `
+                    <div class="status-card pending">
+                        <div class="status-title">
+                            <span class="status-icon">⏳</span>
+                            Migrações Pendentes
+                        </div>
+                        <div class="status-description">
+                            Existem atualizações pendentes para seu banco de dados. Clique no botão abaixo para executá-las.
+                        </div>
+                        <div class="migration-list">
+                            <div class="migration-item">Adicionar coluna link_pdf à tabela biblioteca_livros</div>
+                        </div>
+                    </div>
+                `;
+            }
+
+            container.innerHTML = html;
+        }
+
+        function displayError(message) {
+            const container = document.getElementById('statusContainer');
+            container.innerHTML = `
+                <div class="status-card error">
+                    <div class="status-title">
+                        <span class="status-icon">❌</span>
+                        Erro ao Verificar Status
+                    </div>
+                    <div class="status-description">${message}</div>
+                </div>
+            `;
+        }
+
+        async function executeMigrations() {
+            const btn = document.getElementById('executeBtn');
+            const original = btn.innerHTML;
+            btn.disabled = true;
+            btn.innerHTML = '⏳ Executando...';
+
+            try {
+                const response = await fetch('/TCC-etec/api/migrations/run', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                });
+
+                const data = await response.json();
+
+                if (data.sucesso) {
+                    displayStatus({ link_pdf_existe: true });
+                } else {
+                    displayError(data.erro || 'Erro ao executar migrações');
+                    btn.disabled = false;
+                    btn.innerHTML = original;
+                }
+            } catch (error) {
+                console.error('Erro:', error);
+                displayError('Erro ao conectar com o servidor');
+                btn.disabled = false;
+                btn.innerHTML = original;
+            }
+        }
+
+        // Verificar status ao carregar
+        document.addEventListener('DOMContentLoaded', checkMigrationStatus);
+  
+    </script>
+</body>
+</html>

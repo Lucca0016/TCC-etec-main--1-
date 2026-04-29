@@ -1,0 +1,980 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Catálogo Online - Biblioteca FETEL</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            color-scheme: light;
+            font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+            --bg: #eef5ff;
+            --surface: #ffffff;
+            --surface-soft: #f8fbff;
+            --surface-strong: #f4f7ff;
+            --border: #d9e4f6;
+            --primary: #003d99;
+            --primary-strong: #002b72;
+            --primary-soft: #dde8ff;
+            --accent: #10b981;
+            --accent-strong: #0f766e;
+            --danger: #ef4444;
+            --muted: #4b5563;
+            --text: #102a43;
+        }
+
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            min-height: 100vh;
+            background: radial-gradient(circle at top left, rgba(0, 61, 153, 0.15), transparent 20%),
+                        radial-gradient(circle at bottom right, rgba(0, 86, 179, 0.12), transparent 18%),
+                        var(--bg);
+            color: var(--text);
+            line-height: 1.65;
+        }
+
+        button,
+        input,
+        textarea,
+        select {
+            font: inherit;
+        }
+
+        button {
+            border: none;
+            background: none;
+        }
+
+        .catalogo-header {
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(135deg, #002b72 0%, #003d99 42%, #1f75ff 100%);
+            color: #ffffff;
+            padding: 52px 24px 38px;
+            text-align: center;
+            box-shadow: 0 24px 64px rgba(15, 23, 42, 0.18);
+        }
+
+        .catalogo-header::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: -80px;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.25), transparent 55%);
+            filter: blur(12px);
+        }
+
+        .catalogo-header-inner {
+            position: relative;
+            z-index: 1;
+            max-width: 1120px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .catalogo-header a {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 16px;
+            background: rgba(255, 255, 255, 0.12);
+            border-radius: 18px;
+            transition: transform 0.25s ease, background-color 0.25s ease;
+        }
+
+        .catalogo-header a:hover {
+            transform: translateY(-2px);
+            background: rgba(255, 255, 255, 0.18);
+        }
+
+        .catalogo-header img {
+            height: 62px;
+            width: auto;
+            display: block;
+        }
+
+        .catalogo-titlegroup {
+            max-width: 760px;
+            text-align: center;
+        }
+
+        .catalogo-header h1 {
+            font-size: clamp(2rem, 2.8vw, 3rem);
+            font-weight: 800;
+            margin-bottom: 10px;
+            letter-spacing: -0.04em;
+            line-height: 1.05;
+        }
+
+        .catalogo-header p {
+            margin: 0 auto;
+            max-width: 760px;
+            font-size: 1rem;
+            color: rgba(255, 255, 255, 0.88);
+            opacity: 0.95;
+        }
+
+        .catalogo-main {
+            max-width: 1360px;
+            margin: 0 auto;
+            padding: 40px 20px 64px;
+        }
+
+        .search-container {
+            position: relative;
+            background: var(--surface);
+            padding: 30px 28px 28px;
+            border-radius: 28px;
+            margin-bottom: 36px;
+            box-shadow: 0 24px 60px rgba(15, 23, 42, 0.08);
+            border: 1px solid rgba(28, 70, 156, 0.12);
+        }
+
+        .search-container::before {
+            content: 'CATÁLOGO DINÂMICO';
+            position: absolute;
+            top: -12px;
+            left: 28px;
+            padding: 6px 14px;
+            border-radius: 999px;
+            background: rgba(0, 86, 179, 0.1);
+            color: var(--primary);
+            font-size: 0.78rem;
+            font-weight: 700;
+            letter-spacing: 0.12em;
+        }
+
+        .search-input-wrapper {
+            margin-bottom: 18px;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 16px 18px;
+            border: 1px solid #d0d7e4;
+            border-radius: 16px;
+            font-size: 1rem;
+            outline: none;
+            transition: border-color 0.25s ease, box-shadow 0.25s ease;
+        }
+
+        .search-input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 5px rgba(0, 86, 179, 0.12);
+        }
+
+        .filtros-rapidos {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            justify-content: center;
+        }
+
+        .filtro-btn {
+            padding: 12px 20px;
+            background: var(--surface-soft);
+            border: 1px solid rgba(0, 86, 179, 0.12);
+            border-radius: 999px;
+            color: var(--primary);
+            font-weight: 700;
+            cursor: pointer;
+            transition: transform 0.2s ease, background-color 0.2s ease, border-color 0.2s ease;
+            min-height: 46px;
+        }
+
+        .filtro-btn:hover,
+        .filtro-btn.active {
+            background: var(--primary);
+            color: #ffffff;
+            border-color: var(--primary);
+            transform: translateY(-1px);
+        }
+
+        .catalogo-content {
+            display: grid;
+            grid-template-columns: 320px minmax(0, 1fr);
+            gap: 32px;
+            align-items: start;
+        }
+
+        .filter-sidebar {
+            background: var(--surface);
+            padding: 26px;
+            border-radius: 28px;
+            border-left: 5px solid var(--primary);
+            box-shadow: 0 22px 44px rgba(15, 23, 42, 0.08);
+            position: sticky;
+            top: 24px;
+            align-self: start;
+        }
+
+        .filter-group + .filter-group {
+            margin-top: 28px;
+        }
+
+        .filter-title {
+            font-weight: 800;
+            color: var(--primary);
+            margin-bottom: 14px;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+        }
+
+        .filter-options {
+            display: grid;
+            gap: 12px;
+        }
+
+        .filter-option {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 14px;
+            border-radius: 18px;
+            border: 1px solid transparent;
+            transition: background-color 0.2s ease, border-color 0.2s ease;
+        }
+
+        .filter-option:hover {
+            background: var(--surface-soft);
+            border-color: rgba(0, 86, 179, 0.1);
+        }
+
+        .filter-option input[type="checkbox"],
+        .filter-option input[type="radio"] {
+            cursor: pointer;
+            width: 18px;
+            height: 18px;
+            accent-color: var(--primary);
+            flex-shrink: 0;
+        }
+
+        .filter-option label {
+            cursor: pointer;
+            font-size: 0.95rem;
+            color: #334155;
+        }
+
+        .catalogo-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 24px;
+        }
+
+        .livro-card {
+            position: relative;
+            background: var(--surface);
+            border-radius: 28px;
+            overflow: hidden;
+            border: 1px solid rgba(229, 233, 240, 0.95);
+            box-shadow: 0 18px 40px rgba(15, 23, 42, 0.08);
+            transition: transform 0.25s ease, box-shadow 0.25s ease;
+            display: grid;
+            grid-template-rows: auto 1fr;
+        }
+
+        .livro-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 6px;
+            background: linear-gradient(90deg, var(--primary), #3b82f6);
+        }
+
+        .livro-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 26px 52px rgba(15, 23, 42, 0.15);
+        }
+
+        .livro-imagem {
+            position: relative;
+            width: 100%;
+            min-height: 220px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #eef4ff 0%, #f8fbff 100%);
+        }
+
+        .livro-imagem img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .imagem-placeholder {
+            width: 100%;
+            height: 100%;
+            display: grid;
+            place-items: center;
+            font-size: 3rem;
+            color: #4b5563;
+        }
+
+        .badge {
+            position: absolute;
+            top: 18px;
+            right: 18px;
+            padding: 8px 12px;
+            border-radius: 999px;
+            font-size: 0.72rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+        }
+
+        .badge-disponivel {
+            background: var(--accent);
+            color: #ffffff;
+        }
+
+        .badge-indisponivel {
+            background: var(--danger);
+            color: #ffffff;
+        }
+
+        .livro-info {
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            min-height: 100%;
+        }
+
+        .livro-titulo {
+            font-size: 1rem;
+            font-weight: 800;
+            color: #102a43;
+            line-height: 1.35;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .livro-autor {
+            font-size: 0.95rem;
+            color: #475569;
+            font-weight: 600;
+        }
+
+        .livro-categoria {
+            font-size: 0.9rem;
+            color: #64748b;
+            font-weight: 600;
+        }
+
+        .livro-footer {
+            margin-top: auto;
+            display: grid;
+            gap: 16px;
+            padding-top: 16px;
+            border-top: 1px solid #e5e7eb;
+        }
+
+        .copias-disponiveis {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: var(--primary-strong);
+        }
+
+        .livro-acoes {
+            display: grid;
+            gap: 12px;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        .btn-detalhes {
+            width: 100%;
+            padding: 14px 16px;
+            color: #ffffff;
+            border-radius: 16px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            font-weight: 700;
+            transition: transform 0.2s ease, background-color 0.2s ease;
+        }
+
+        .btn-detalhes {
+            background: linear-gradient(135deg, #0f4db0, #3b82f6);
+        }
+
+        .btn-detalhes:hover {
+            transform: translateY(-1px);
+            background: linear-gradient(135deg, #003d99, #2563eb);
+        }
+
+        .btn-detalhes-secondary {
+            background: linear-gradient(135deg, #10b981, #22c55e);
+        }
+
+        .btn-detalhes-secondary:hover {
+            background: linear-gradient(135deg, #0f766e, #15803d);
+        }
+
+        .estado-vazio {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 60px 20px;
+            color: #475569;
+        }
+
+        .estado-vazio h2 {
+            font-size: 1.6rem;
+            color: #0f172a;
+            margin-bottom: 8px;
+        }
+
+        .loading-skeleton {
+            background: linear-gradient(90deg, #eff6ff 25%, #e2e8f0 50%, #eff6ff 75%);
+            background-size: 200% 100%;
+            animation: shimmer 1.8s infinite;
+            border-radius: 22px;
+        }
+
+        .skeleton-card {
+            background: var(--surface);
+            border-radius: 28px;
+            overflow: hidden;
+            box-shadow: 0 18px 40px rgba(15, 23, 42, 0.06);
+            display: grid;
+            grid-template-rows: auto 1fr;
+        }
+
+        .skeleton-imagem {
+            width: 100%;
+            height: 220px;
+            background: #e2e8f0;
+        }
+
+        .skeleton-texto {
+            padding: 20px;
+            display: grid;
+            gap: 14px;
+        }
+
+        .skeleton-titulo,
+        .skeleton-autor {
+            border-radius: 10px;
+            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+
+        .skeleton-titulo {
+            height: 16px;
+            width: 80%;
+            background: #e2e8f0;
+        }
+
+        .skeleton-autor {
+            height: 12px;
+            width: 60%;
+            background: #e2e8f0;
+        }
+
+        @keyframes shimmer {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .catalogo-footer {
+            background: #002b72;
+            color: white;
+            text-align: center;
+            padding: 24px 20px;
+            margin-top: 44px;
+            font-size: 0.95rem;
+            border-radius: 0 0 24px 24px;
+        }
+
+        .paginacao {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin: 40px 0 0;
+        }
+
+        .paginacao button {
+            padding: 12px 18px;
+            border: 1px solid #d0d7e4;
+            background: #ffffff;
+            color: var(--primary);
+            border-radius: 14px;
+            cursor: pointer;
+            font-weight: 700;
+            transition: all 0.2s ease;
+            min-width: 56px;
+        }
+
+        .paginacao button:hover,
+        .paginacao button.active {
+            background: var(--primary);
+            color: #ffffff;
+            border-color: var(--primary);
+        }
+
+        .paginacao button:disabled {
+            opacity: 0.55;
+            cursor: not-allowed;
+        }
+
+        @media (max-width: 1024px) {
+            .catalogo-content {
+                grid-template-columns: 1fr;
+            }
+
+            .filter-sidebar {
+                position: relative;
+                top: 0;
+            }
+
+            .catalogo-grid {
+                grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            }
+        }
+
+        @media (max-width: 768px) {
+            .catalogo-main {
+                padding: 28px 16px 56px;
+            }
+
+            .catalogo-header {
+                padding: 38px 16px 28px;
+            }
+
+            .catalogo-header h1 {
+                font-size: 1.9rem;
+            }
+
+            .search-container {
+                padding: 24px;
+            }
+
+            .catalogo-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .filter-sidebar {
+                order: 2;
+                top: 0;
+                position: relative;
+            }
+
+            .catalogo-grid {
+                order: 1;
+            }
+
+            .filter-sidebar,
+            .catalogo-grid {
+                width: 100%;
+            }
+
+            .filtros-rapidos {
+                justify-content: center;
+            }
+
+            .livro-acoes {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+    <script>
+        // Verificar se usuário está logado
+        // Se não estiver, redireciona para login
+        document.addEventListener('DOMContentLoaded', function() {
+            fetch('/TCC-etec/api/auth/check', {
+                method: 'GET',
+                credentials: 'include'
+            })
+            .then(response => {
+                if (response.status === 401) {
+                    // Não autenticado, redireciona para login
+                    window.location.href = '/TCC-etec/login';
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (!data.autenticado) {
+                    // Não autenticado, redireciona para login
+                    window.location.href = '/TCC-etec/login';
+                }
+            })
+            .catch(error => {
+                // Em caso de erro, redireciona para login por segurança
+                window.location.href = '/TCC-etec/login';
+            });
+        });
+    </script>
+</head>
+  <script src="/TCC-etec/public/js/auth.js"></script>
+  <script>
+    (function () {
+      const token = localStorage.getItem('access_token');
+      if (!token) {
+        window.location.href = '/TCC-etec/public/index.html';
+      }
+    })();
+  </script>
+<body>
+    <header class="catalogo-header">
+        <div class="catalogo-header-inner">
+            <a href="/TCC-etec/" aria-label="FETEL - Página Inicial">
+                <img src="/TCC-etec/img/fetel_sem_fundo.png" alt="FETEL">
+            </a>
+            <div class="catalogo-titlegroup">
+                <h1>Catálogo Online - Biblioteca FETEL</h1>
+                <p>Encontre livros, autores e recursos com a agilidade de uma biblioteca moderna.</p>
+            </div>
+        </div>
+    </header>
+
+    <main class="catalogo-main">
+        <div class="search-container">
+            <div class="search-input-wrapper">
+                <input 
+                    type="text" 
+                    class="search-input" 
+                    id="searchInput"
+                    placeholder="Buscar por título, autor ou ISBN..."
+                    aria-label="Buscar livros"
+                >
+            </div>
+            <div class="filtros-rapidos">
+                <button class="filtro-btn active" data-filtro="todos">Todos</button>
+                <button class="filtro-btn" data-filtro="disponiveis">Disponíveis</button>
+                <button class="filtro-btn" data-filtro="indisponiveis">Emprestados</button>
+            </div>
+        </div>
+
+        <div class="catalogo-content">
+            <aside class="filter-sidebar">
+                <div class="filter-group">
+                    <div class="filter-title">Ordenar por</div>
+                    <div class="filter-options">
+                        <div class="filter-option">
+                            <input type="radio" id="ordenacao-titulo" name="ordenacao" value="titulo" checked>
+                            <label for="ordenacao-titulo">Título A-Z</label>
+                        </div>
+                        <div class="filter-option">
+                            <input type="radio" id="ordenacao-data" name="ordenacao" value="data">
+                            <label for="ordenacao-data">Data (Recente)</label>
+                        </div>
+                        <div class="filter-option">
+                            <input type="radio" id="ordenacao-autor" name="ordenacao" value="autor">
+                            <label for="ordenacao-autor">Autor A-Z</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="filter-group">
+                    <div class="filter-title">Categoria</div>
+                    <div class="filter-options" id="categoriasList"></div>
+                </div>
+
+                <div class="filter-group">
+                    <div class="filter-title">Ano</div>
+                    <div class="filter-options" id="anosList"></div>
+                </div>
+            </aside>
+
+            <div class="catalogo-grid" id="catalogoGrid">
+                <div class="skeleton-card loading-skeleton">
+                    <div class="skeleton-imagem"></div>
+                    <div class="skeleton-texto">
+                        <div class="skeleton-titulo"></div>
+                        <div class="skeleton-autor"></div>
+                    </div>
+                </div>
+                <div class="skeleton-card loading-skeleton">
+                    <div class="skeleton-imagem"></div>
+                    <div class="skeleton-texto">
+                        <div class="skeleton-titulo"></div>
+                        <div class="skeleton-autor"></div>
+                    </div>
+                </div>
+                <div class="skeleton-card loading-skeleton">
+                    <div class="skeleton-imagem"></div>
+                    <div class="skeleton-texto">
+                        <div class="skeleton-titulo"></div>
+                        <div class="skeleton-autor"></div>
+                    </div>
+                </div>
+                <div class="skeleton-card loading-skeleton">
+                    <div class="skeleton-imagem"></div>
+                    <div class="skeleton-texto">
+                        <div class="skeleton-titulo"></div>
+                        <div class="skeleton-autor"></div>
+                    </div>
+                </div>
+                <div class="skeleton-card loading-skeleton">
+                    <div class="skeleton-imagem"></div>
+                    <div class="skeleton-texto">
+                        <div class="skeleton-titulo"></div>
+                        <div class="skeleton-autor"></div>
+                    </div>
+                </div>
+                <div class="skeleton-card loading-skeleton">
+                    <div class="skeleton-imagem"></div>
+                    <div class="skeleton-texto">
+                        <div class="skeleton-titulo"></div>
+                        <div class="skeleton-autor"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="paginacao" id="paginacao"></div>
+    </main>
+
+    <footer class="catalogo-footer">
+        <p>&copy; 2026 FETEL - Biblioteca Online. Todos os direitos reservados.</p>
+    </footer>
+
+    <script>
+        const API_BASE = '/TCC-etec/api';
+        let filtrosAtuais = {
+            titulo: '',
+            autor: '',
+            categoria: '',
+            ano: '',
+            disponibilidade: 'todos',
+            ordenacao: 'titulo',
+            pagina: 1
+        };
+
+        const searchInput = document.getElementById('searchInput');
+        const catalogoGrid = document.getElementById('catalogoGrid');
+        const paginacao = document.getElementById('paginacao');
+        const filtroRapidos = document.querySelectorAll('.filtro-btn');
+        const ordenacaoRadios = document.querySelectorAll('input[name="ordenacao"]');
+        const categoriasList = document.getElementById('categoriasList');
+        const anosList = document.getElementById('anosList');
+
+        async function carregarMetadados() {
+            try {
+                const response = await fetch(`${API_BASE}/catalogo/metadados`);
+                const data = await response.json();
+
+                if (data.sucesso && data.dados) {
+                    renderizarCategorias(data.dados.categorias || []);
+                    renderizarAnos(data.dados.anos || []);
+                }
+            } catch (error) {
+                console.error('Erro ao carregar metadados:', error);
+            }
+        }
+
+        function renderizarCategorias(categorias) {
+            categoriasList.innerHTML = categorias.map(cat => `
+                <div class="filter-option">
+                    <input type="radio" id="cat-${cat}" name="categoria" value="${cat}">
+                    <label for="cat-${cat}">${escapeHtml(cat)}</label>
+                </div>
+            `).join('');
+
+            document.querySelectorAll('input[name="categoria"]').forEach(radio => {
+                radio.addEventListener('change', () => {
+                    filtrosAtuais.categoria = radio.value;
+                    filtrosAtuais.pagina = 1;
+                    carregarLivros();
+                });
+            });
+        }
+
+        function renderizarAnos(anos) {
+            anosList.innerHTML = anos.map(ano => `
+                <div class="filter-option">
+                    <input type="checkbox" id="ano-${ano}" value="${ano}">
+                    <label for="ano-${ano}">${ano}</label>
+                </div>
+            `).join('');
+
+            document.querySelectorAll('input[id^="ano-"]').forEach(checkbox => {
+                checkbox.addEventListener('change', () => {
+                    const anosSelected = Array.from(document.querySelectorAll('input[id^="ano-"]:checked'))
+                        .map(c => c.value);
+                    filtrosAtuais.ano = anosSelected.length > 0 ? anosSelected[0] : '';
+                    filtrosAtuais.pagina = 1;
+                    carregarLivros();
+                });
+            });
+        }
+
+        searchInput.addEventListener('input', debounce(() => {
+            filtrosAtuais.titulo = searchInput.value;
+            filtrosAtuais.pagina = 1;
+            carregarLivros();
+        }, 300));
+
+        filtroRapidos.forEach(btn => {
+            btn.addEventListener('click', () => {
+                filtroRapidos.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                filtrosAtuais.disponibilidade = btn.dataset.filtro;
+                filtrosAtuais.pagina = 1;
+                carregarLivros();
+            });
+        });
+
+        ordenacaoRadios.forEach(radio => {
+            radio.addEventListener('change', () => {
+                filtrosAtuais.ordenacao = radio.value;
+                filtrosAtuais.pagina = 1;
+                carregarLivros();
+            });
+        });
+
+        function debounce(func, wait) {
+            let timeout;
+            return function executedFunction(...args) {
+                const later = () => {
+                    clearTimeout(timeout);
+                    func(...args);
+                };
+                clearTimeout(timeout);
+                timeout = setTimeout(later, wait);
+            };
+        }
+
+        async function carregarLivros() {
+            const params = new URLSearchParams();
+            Object.entries(filtrosAtuais).forEach(([key, value]) => {
+                if (value && value !== 'todos') params.append(key, value);
+            });
+
+            try {
+                const response = await fetch(`${API_BASE}/livros?${params}`);
+                const data = await response.json();
+
+                if (data.sucesso) {
+                    renderizarLivros(data.dados);
+                    renderizarPaginacao(data.pagina, data.total_paginas);
+                } else {
+                    catalogoGrid.innerHTML = '<div class="estado-vazio"><h2>Erro ao carregar</h2><p>Tente novamente mais tarde</p></div>';
+                }
+            } catch (error) {
+                console.error('Erro:', error);
+                catalogoGrid.innerHTML = '<div class="estado-vazio"><h2>Erro na conexão</h2><p>Verifique sua internet</p></div>';
+            }
+        }
+
+        function renderizarLivros(livros) {
+            if (livros.length === 0) {
+                catalogoGrid.innerHTML = '<div class="estado-vazio" style="grid-column: 1 / -1;"><h2>Nenhum livro encontrado</h2><p>Tente ajustar seus filtros</p></div>';
+                return;
+            }
+
+            catalogoGrid.innerHTML = livros.map(livro => {
+                const midia = livro.midias && livro.midias.length > 0 ? livro.midias[0] : null;
+                const urlPdf = midia && midia.url_link && midia.url_link.toLowerCase().includes('pdf') ? midia.url_link : null;
+                const urlImagem = midia ? midia.url_imagem : null;
+                
+                return `
+                <div class="livro-card">
+                    <div class="livro-imagem">
+                        ${urlImagem ? 
+                            `<img src="${urlImagem}" alt="${escapeHtml(livro.titulo)}">` :
+                            `<div class="imagem-placeholder">📚</div>`
+                        }
+                        <span class="badge ${livro.copias_disponiveis > 0 ? 'badge-disponivel' : 'badge-indisponivel'}">
+                            ${livro.copias_disponiveis > 0 ? 'Disponível' : 'Indisponível'}
+                        </span>
+                    </div>
+                    <div class="livro-info">
+                        <h3 class="livro-titulo">${escapeHtml(livro.titulo)}</h3>
+                        <p class="livro-autor">${escapeHtml(livro.autor || 'Sem autor')}</p>
+                        <p class="livro-categoria">${escapeHtml(livro.categoria || 'Sem categoria')}</p>
+                        <div class="livro-footer">
+                            <span class="copias-disponiveis">${livro.copias_disponiveis} ${livro.copias_disponiveis === 1 ? 'cópia' : 'cópias'}</span>
+                            <div class="livro-acoes">
+                                <button class="btn-detalhes">Ver Detalhes</button>
+                                ${urlPdf ? 
+                                    `<button class="btn-detalhes btn-detalhes-secondary" onclick="abrirPdf('${escapeHtml(urlPdf)}')">Ler PDF</button>` :
+                                    ''
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `}).join('');
+        }
+
+        function abrirPdf(url) {
+            window.open(url, '_blank');
+        }
+
+        function renderizarPaginacao(paginaAtual, totalPaginas) {
+            paginacao.innerHTML = '';
+            
+            if (totalPaginas <= 1) return;
+
+            if (paginaAtual > 1) {
+                const btnAnterior = document.createElement('button');
+                btnAnterior.textContent = '← Anterior';
+                btnAnterior.onclick = () => mudarPagina(paginaAtual - 1);
+                paginacao.appendChild(btnAnterior);
+            }
+
+            for (let i = 1; i <= totalPaginas; i++) {
+                if (i === paginaAtual || (i > paginaAtual - 2 && i < paginaAtual + 2)) {
+                    const btn = document.createElement('button');
+                    btn.textContent = i;
+                    if (i === paginaAtual) btn.classList.add('active');
+                    btn.onclick = () => mudarPagina(i);
+                    paginacao.appendChild(btn);
+                }
+            }
+
+            if (paginaAtual < totalPaginas) {
+                const btnProxima = document.createElement('button');
+                btnProxima.textContent = 'Próxima →';
+                btnProxima.onclick = () => mudarPagina(paginaAtual + 1);
+                paginacao.appendChild(btnProxima);
+            }
+        }
+
+        function mudarPagina(novaPagina) {
+            filtrosAtuais.pagina = novaPagina;
+            carregarLivros();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        carregarMetadados();
+        carregarLivros();
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,71 @@
+Options +FollowSymLinks -Indexes
+
+<IfModule mod_authz_core.c>
+    Require all granted
+</IfModule>
+
+DirectoryIndex index.html index.php
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteBase /TCC-etec/
+    
+    # Permitir acesso a arquivos e diretórios reais
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    
+    # Redirecionar imagens e arquivos estáticos para public
+    RewriteRule ^img/(.*)$ public/img/$1 [L]
+    RewriteRule ^css/(.*)$ public/css/$1 [L]
+    RewriteRule ^js/(.*)$ public/js/$1 [L]
+    
+    # Rota de API
+    RewriteRule ^api/(.*)$ public/api.php [L,QSA]
+    
+    # Scripts de utility (seed, test, etc) não são redirecionados
+    RewriteCond %{REQUEST_FILENAME} -f
+    RewriteRule ^(seed_|test_|check_).*\.php$ - [L]
+    
+    # Servir arquivos HTML estáticos sem passar pelo PHP (URLs limpas)
+    RewriteRule ^login/?$ resources/views/auth/login.php [L]
+    RewriteRule ^recuperar_senha/?$ public/recuperar_senha.html [L]
+    RewriteRule ^catalogo/?$ public/catalogo.html [L]
+    RewriteRule ^index/?$ public/index.html [L]
+    
+    # Se pedir a raiz, redireciona para index.html
+    RewriteRule ^$ public/index.html [L]
+    
+    # Tudo mais vai para o sistema PHP
+    RewriteRule ^(.*)$ public/index.php [L]
+</IfModule>
+
+<IfModule mod_headers.c>
+    Header set X-Frame-Options "SAMEORIGIN"
+    Header set X-Content-Type-Options "nosniff"
+    Header set X-XSS-Protection "1; mode=block"
+    Header set Referrer-Policy "strict-origin-when-cross-origin"
+</IfModule>
+
+<Files ".env">
+    <IfModule mod_authz_core.c>
+        Require all denied
+    </IfModule>
+</Files>
+
+<Files "composer.json">
+    <IfModule mod_authz_core.c>
+        Require all denied
+    </IfModule>
+</Files>
+
+<Files "composer.lock">
+    <IfModule mod_authz_core.c>
+        Require all denied
+    </IfModule>
+</Files>
+
+<FilesMatch "^\.">
+    <IfModule mod_authz_core.c>
+        Require all denied
+    </IfModule>
+</FilesMatch>
